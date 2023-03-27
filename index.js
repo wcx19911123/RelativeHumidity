@@ -85,7 +85,6 @@ function getHistory10Days(cityId) {
         result.push(getHistory(cityId, getDate(-i)))
     }
     result = Promise.allSettled([...result]);
-    console.log(result);
     return result;
 }
 
@@ -93,7 +92,6 @@ function formatData(historyList) {
     let result = {};
     result.total = [['日期', '最小相对湿度', '平均相对湿度', '最大相对湿度']];
     result.days = {'default': [['小时', '实时相对湿度']]};
-    console.log('开始格式化');
     historyList.forEach(day => {
         day.weatherHourly.forEach(hour => {
             if (!result.days[day.weatherDaily.date]) {
@@ -149,7 +147,6 @@ function showDayHistory() {
     if (!data) {
         return;
     }
-    console.log();
     let dayData = google.visualization.arrayToDataTable(data);
     let dayOptions = {
         title: date + '的相对湿度',
@@ -166,11 +163,15 @@ function showDayHistory() {
         dataOpacity: 0.6,
         pointSize: 6,
     };
+    document.querySelector('#div_history_1day').style.display = '';
     DAY_CHART = new google.visualization.LineChart(document.getElementById('div_history_1day'));
     DAY_CHART.draw(dayData, dayOptions);
     location.href = location.href.substring(0, location.href.lastIndexOf('#')) + "#div_history_1day";
     google.visualization.events.addListener(DAY_CHART, 'select',
-        () => location.href = location.href.substring(0, location.href.lastIndexOf('#')) + "#div_history_10days");
+        () => {
+            document.querySelector('#div_history_1day').style.display = 'none';
+            location.href = location.href.substring(0, location.href.lastIndexOf('#')) + "#div_history_10days";
+        });
 }
 
 function start() {
