@@ -31,7 +31,7 @@ async function getCityCode(cityName, upName, filter) {
         console.log('从缓存读取城市ID，' + cityName + '：' + result);
         return result.id;
     }
-    result = await fetch(`https://geoapi.qweather.com/v2/city/lookup?key=${getParam('k1')}
+    result = await fetch(`https://${getParam('h')}/geo/v2/city/lookup?key=${getParam('k1')}
 &location=${cityName}
 ${upName ? '&adm=' + upName : ''}`)
         .then(response => response.json())
@@ -65,7 +65,7 @@ async function getHistory(cityId, date) {
         console.log('从缓存读取历史天气，' + cityId + '_' + date + '：' + result.substr(0, 100));
         return JSON.parse(result);
     }
-    result = await fetch(`https://api.qweather.com/v7/historical/weather?key=${getParam('k2')}
+    result = await fetch(`https://${getParam('h')}/v7/historical/weather?key=${getParam('k2')}
 &location=${cityId}&date=${date}`)
         .then(response => response.json())
         .then(json => result = json?.code === '200' ? JSON.stringify(json) : null);
